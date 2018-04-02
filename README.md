@@ -23,7 +23,7 @@ mqtt:
 
 To fully understand how the IoT device works, we must first create a simple switch. This configuration will be able to send and receive a binary state to the device. The messages sent/received are 'message payloads.' When the client(Onion Omega 2+) receives the 'ON' message, it will trigger the GPIO pin to become high. Likewise, when the client receives the message 'OFF', it will set the pin to low.
 
-This client will be a subscriber so we only need the command_topic. 
+Given that the client only receives commands from the broker, we only need a ```command_topic```.
 
 ```
 light: 
@@ -37,7 +37,7 @@ light:
 
 By using OPKG (package manager), you are able to install the DHT11/DHT22 package to use the sensors. [Link to the Onion page to set up sensors.](https://onion.io/2bt-reading-dht-sensor-data/) Highly recommend you set up sensors and learn how they work before continuing. 
 
-This client will be a publisher 
+```state_topic``` is being used to updated the broker on the state of the client. 
 
 ```
   - platform: mqtt
@@ -55,6 +55,8 @@ This client will be a publisher
     
 ## Motion Detection (Passive Infrared Sensor)
 
+Similarly, this works the same as the Temperature/humidity client. A ```state_topic``` is needed. 
+
 ```
   - platform: mqtt
     state_topic: "home/motion"
@@ -62,3 +64,9 @@ This client will be a publisher
     qos: 0
     payload_on: "ON"
     payload_off: "OFF"
+```
+## Power Monitoring (Currently working on)
+
+Becasue I did not want to use an arduino Expansion Dock, I decided to implement an ADC to receive analog data and convert it to digital in order to have more control on the data. Communication with the ADC is done through the Serial Peripheral Interface bus. [ADC MCP3008](https://cdn-shop.adafruit.com/datasheets/MCP3008.pdf) I am using a [non-invasive current sensor](https://www.sparkfun.com/products/11005) to read AC current from the appliances. 
+
+Update: I will upload the voltage divider diagram along with the burder resistor used to obtain an accurate readings. 
