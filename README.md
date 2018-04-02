@@ -67,6 +67,6 @@ Similarly, this works the same as the Temperature/humidity client. A ```state_to
 ```
 ## Power Monitoring (Currently working on)
 
-Becasue I did not want to use an arduino Expansion Dock, I decided to implement an ADC to receive analog data and convert it to digital in order to have more control on the data. Communication with the ADC is done through the Serial Peripheral Interface bus. [ADC MCP3008](https://cdn-shop.adafruit.com/datasheets/MCP3008.pdf) I am using a [non-invasive current sensor](https://www.sparkfun.com/products/11005) to read AC current from the appliances. 
+Becasue I did not want to use an arduino Expansion Dock, I decided to implement an ADC to receive analog data and convert it to digital in order to have more control on the data. The communication from the Onion Omega 2+ and MCP3008, is done with the Serial Peripheral Interface bus. [ADC MCP3008](https://cdn-shop.adafruit.com/datasheets/MCP3008.pdf) I am using a [non-invasive current sensor](https://www.sparkfun.com/products/11005) to read AC current from the appliances. 
 
-Update: I will upload the voltage divider diagram along with the burder resistor used to obtain an accurate readings. 
+Update: Communication with Homeassistant is still in development. I will upload the voltage divider diagram along with the burder resistor used to obtain an accurate readings.
