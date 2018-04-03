@@ -27,7 +27,7 @@ def printSettings(obj):
     print " "
 
 #assigning the pins for spi bus and assigning the clock speed for 3.3V
-def initADC(miso, mosi, sclk, cs):
+def ADC(miso, mosi, sclk, cs):
     spiDev  = onionSpi.OnionSpi(1, 32766)
     spiDev.delay = 10
     spiDev.mode = 0
@@ -36,60 +36,65 @@ def initADC(miso, mosi, sclk, cs):
     spiDev.miso = miso
     spiDev.cs = cs
     spiDev.speed = 1350000 
-
+    
+    #chekcing if device is in existance
     spiDev.setVerbosity(0)
     print 'Checking if device exists...'
     out = spiDev.checkDevice()
     print '   Device does not exist: %d'%(out)
 
+    #Registering device with spiDev
     print 'Registering the device...'
     out = spiDev.registerDevice()
     print '   registerDevice returned: %d'%(out)
-
+    
+    #chekcing to see for parameters
     print 'Initializing the device parameters...'
     out = spiDev.setupDevice()
     print '   setupDevice returned: %d'%(out)
 
-    print '\nChecking if device exists...'
-    out = spiDev.checkDevice()
-    print '   Device does not exist: %d'%(out)
-
     return spiDev
 
 #function to obtain data 
-def poll_sensor(spiDev, channel):
+def polling_sensor(spiDev, channel):
 
+    #only used when inputed, may change in the future
     assert 0 <= channel <= 1, 'ADC channel must be 0 or 1.'
 
-    #leading bit + 
+    #leading bit + single-ended mode or pseudo-differential + channel. The rest of the 8 bit configuration is filled with zeros
+    #look at http://www.farnell.com/datasheets/1599363.pdf for more information about spi bus configuration. Page 15 of 34
+    #channel 0 is set as default
     if channel == 1:
 	#11100000
-        cbyte = 0xE0
-    else:
-	#11000000
-        cbyte = 0xC0
+        hexbyte = 0xE0
+    #11000000
+    hexbyte = 0xC0
 
-    #first bit and single with channel, readByte is already MSBF
-    spiResp = spiDev.readBytes(cbyte, 3)
+    #the function is going to send 3 bytes to the TX and RX buffer would be too large to read
+    #you need to do use the function this way to work or it will return all ones
+    #https://github.com/OnionIoT/spi-gpio-driver/blob/master/src/python/python-onion-spi.c#L131
+    resp = spiDev.readBytes(hexbyte, 3)
 
-    byte0 = spiResp[0]
-    byte1 = spiResp[1]
-    byte2 = spiResp[2]
+    byte0 = resp[0]
+    byte1 = resp[1]
+    byte2 = resp[2]
 
     #print channel
     #print cbyte
-    print (byte0, byte1, byte2)
-
+    #print (byte0, byte1, byte2)
+	
+    #the response of the adc will be spread throughout 3 bytes so we need to shift to the bits
+    #to the left and will be 10 bits (hence why it's a 10 bit ADC) 
     return 0x3FF & ((byte0 & 0x01) << 9 | (byte1 & 0xFF) << 1 | (byte2 & 0x80) >> 7 )
 
-#start of main program 
-spi = initADC(9,8,7,6)
+#start of main 
+spi = ADC(9,8,7,6)
 
 channel = 0
 adcValues = []
-for i in range(100):
+for i in range(20):
 
-    monkey = poll_sensor(spi, channel)
+    monkey = polling_sensor(spi, channel)
     #volt = round (((monkey * 3300) / 1024), 0)
     print ('10 bit resolution: ' + str(monkey))
     #print ('Voltage (mV): ' + str(volt))
