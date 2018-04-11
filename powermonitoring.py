@@ -2,7 +2,6 @@
 
 import time
 import onionSpi
-import struct
 
 #printing settings for spi bus
 def printSettings(obj):
