@@ -89,7 +89,7 @@ def polling_sensor(spiDev, channel):
 
 #start of main 
 spi = ADC(9,8,7,6)
-
+'''
 channel = 0
 adcValues = []
 for i in range(20):
@@ -102,3 +102,28 @@ for i in range(20):
     #Sampling rate at 60Hz for hairdryer, becasue of Nyquist Theorem, we want to get 10 times the amount of samples
     #to obtain an accurate reading. Anything above samplerate * 2 will be fine  
     time.sleep(0.0014)
+'''
+
+sumtot = 0
+channel = 0
+#on EmonLib, this is (ADC_COUNT >> 1), which will equal 5
+#ADC_COUNT is 10 because it is using the 10 bit configuration
+offsetI = 5
+adcValues = []
+for i in range(1000):
+
+    monkey = poll_sensor(spi, channel)
+
+    offsetI = (offsetI + (monkey - offsetI)/1024)
+    filtered = monkey - offsetI
+
+    sqI = filtered * filtered
+
+    sumtot += sqI
+
+iratio = 27.78 * (3.3/10)
+
+irms = iratio * (sumtot/1000)**2
+
+print("{} is the rms for the current".format(irms))
+    #time.sleep(0)
