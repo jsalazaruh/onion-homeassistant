@@ -127,7 +127,7 @@ for i in range(1000):
 
 iratio = 27.78 * (3.3/10)
 
-irms = iratio * (sumtot/1000)**2
+irms = iratio * (sumtot/1000)**(0.5)
 
 print("{0} is the rms for the current and the average resolution is {1}".format(irms, tot))
     #time.sleep(0)
