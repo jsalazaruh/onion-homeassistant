@@ -68,7 +68,7 @@ def polling_sensor(spiDev, channel):
 	#11100000
         hexbyte = 0xE0
     #11000000
-    hexbyte = 0xC0
+    	hexbyte = 0xC0
 
     #the function is going to send 3 bytes to the TX and RX buffer would be too large to read
     #you need to do use the function this way to work or it will return all ones
