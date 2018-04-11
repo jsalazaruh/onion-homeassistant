@@ -106,16 +106,17 @@ for i in range(20):
 sumtot = 0
 channel = 0
 tot = 0
-avg - 0
+avg = 0
+samples = 1000
 #on EmonLib, this is (ADC_COUNT >> 1), which will equal 5
 #ADC_COUNT is 10 because it is using the 10 bit configuration
 offsetI = 5
 adcValues = []
-for i in range(1000):
+for i in range(samples):
 
     monkey = poll_sensor(spi, channel)
     avg += monkey
-    tot = avg / 1000
+    tot = avg / samples
 
     offsetI = (offsetI + (monkey - offsetI)/1024)
     filtered = monkey - offsetI
@@ -126,7 +127,7 @@ for i in range(1000):
 
 iratio = 27.78 * (3.3/10)
 
-irms = iratio * (sumtot/1000)**(0.5)
+irms = iratio * (sumtot/samples)**(0.5)
 
 print("{0} is the rms for the current and the average resolution is {1}".format(irms, tot))
     #time.sleep(0)
