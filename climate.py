@@ -20,9 +20,12 @@ temperature2 = second['temperature']
 
 #comparing data in order to verify authenticity of data
 if(abs(humidity1 - humidity2) > 2 or abs(temperature1 - temperature2) > 2 or temperature1 < -200 or temperature2 < -200 or humidity1 < -200 or humidity2 < -200):
- print("Problem")
+    print("Problem")
 else:
- str = json.dumps(second)
- print(str)
- publish.single("home/sensor", str, hostname="10.0.0.174", port=1883)
- time.sleep(6)
+    str = json.dumps(second)
+    print(str)
+    try:
+        publish.single("home/sensor", str, hostname="10.0.0.174", port=1883)
+    except:
+        pass
+    time.sleep(6)
