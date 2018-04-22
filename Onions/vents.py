@@ -28,7 +28,7 @@ def on_message(client, userdata, msg):
         subprocess.call(['pwm-exp', '-i', '0', '6'])
         print "V1_HALF"
 		
-	  elif "V2_OPEN" in msg.payload:
+    elif "V2_OPEN" in msg.payload:
         subprocess.call(['pwm-exp', '-i', '1', '9'])
         print "V2_OPEN"
     
