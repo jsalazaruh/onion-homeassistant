@@ -25,7 +25,7 @@ else:
     str = json.dumps(second)
     print(str)
     try:
-        publish.single("home/sensor", str, hostname="10.0.0.174", port=1883)
+        publish.single("home/sensor", str, hostname="IP_ADDRESS", port=1883)
     except:
         pass
 time.sleep(6)
