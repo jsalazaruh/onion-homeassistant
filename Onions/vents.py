@@ -1,19 +1,22 @@
+#This code's mainly use is for a single onion omega with multiple servo motors by using the PWM expansion dock 
+#All of the smart vents are being controlled by one topic
+#The vents can be changed by the package that the broker is sending to the client
+
 import paho.mqtt.client as mqtt
 import subprocess
 import time
 
-broker="IP_ADDRESS"
+broker="YOUR_IP_HERE"
 
-# The callback for when the client receives a CONNACK response from the server.
+#The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
 
-    # Subscribing in on_connect() means that if we lose the connection and
-    # reconnect then subscriptions will be renewed.
-    
-	client.subscribe("home/vents")
+    #Subscribing in on_connect() means that if we lose the connection and
+    #reconnect then subscriptions will be renewed.
+    client.subscribe("home/vents")
 
-# The callback for when a PUBLISH message is received from the server.
+#The callback for when a PUBLISH message is received from the server.
 def on_message(client, userdata, msg):
 
     if "V1_OPEN" in msg.payload:
