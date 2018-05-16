@@ -6,7 +6,26 @@ import json
 import paho.mqtt.publish as publish
 from decimal import Decimal
 
-
+def printSettings(obj):
+    print "SPI Device Settings:"
+    print "  bus:      %d"%(obj.bus)
+    print "  device:   %d"%(obj.device)
+    print "  speed:    %d Hz (%d kHz)"%(obj.speed, obj.speed/1000)
+    print "  delay:    %d us"%(obj.delay)
+    print "  bpw:      %d"%(obj.bitsPerWord)
+    print "  mode:     %d (0x%02x)"%(obj.mode, obj.modeBits)
+    print "  3wire:    %d"%(obj.threewire)
+    print "  lsb:      %d"%(obj.lsbfirst)
+    print "  loop:     %d"%(obj.loop)
+    print "  no-cs:    %d"%(obj.noCs)
+    print "  cs-high:  %d"%(obj.csHigh)
+    print " "
+    print "GPIO Settings:"
+    print "  sck:    %d"%(obj.sck)
+    print "  mosi:   %d"%(obj.mosi)
+    print "  miso:   %d"%(obj.miso)
+    print "  cs:     %d"%(obj.cs)
+    print " "
 
 #assigning the pins for spi bus and assigning the clock speed for 3.3V
 def ADC(miso, mosi, sclk, cs):
