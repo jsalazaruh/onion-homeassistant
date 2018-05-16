@@ -65,6 +65,9 @@ Similarly, this works the same as the Temperature/humidity client. A ```state_to
     payload_on: "Occupied"
     payload_off: "Away"
 ```
+![Amalgamation of LED and sensors 1](https://user-images.githubusercontent.com/25919226/40144146-3a1b3c12-5923-11e8-996d-3d5f52d63a4a.png)
+![Amalgamation of LED and sensors 2](https://user-images.githubusercontent.com/25919226/40144148-3a47d808-5923-11e8-926e-528f7f8e7d38.png)
+
 ## Power Monitoring (non-invasive current sensor, Analog to Digital Converter)
 
 Becasue I did not want to use an arduino Expansion Dock, I decided to implement an ADC to receive analog data and convert it to digital in order to have more control on the data. The communication from the Onion Omega 2+ and MCP3002, is done with the Serial Peripheral Interface bus. [ADC MCP3002](http://www.farnell.com/datasheets/1599363.pdf) I am using a [non-invasive current sensor](https://www.sparkfun.com/products/11005) to read AC current from the appliances. 
