@@ -6,28 +6,7 @@ import json
 import paho.mqtt.publish as publish
 from decimal import Decimal
 
-def printSettings(obj):
-    print "SPI Device Settings:"
-    print "  bus:      %d"%(obj.bus)
-    print "  device:   %d"%(obj.device)
-    print "  speed:    %d Hz (%d kHz)"%(obj.speed, obj.speed/1000)
-    print "  delay:    %d us"%(obj.delay)
-    print "  bpw:      %d"%(obj.bitsPerWord)
-    print "  mode:     %d (0x%02x)"%(obj.mode, obj.modeBits)
-    print "  3wire:    %d"%(obj.threewire)
-    print "  lsb:      %d"%(obj.lsbfirst)
-    print "  loop:     %d"%(obj.loop)
-    print "  no-cs:    %d"%(obj.noCs)
-    print "  cs-high:  %d"%(obj.csHigh)
-    print " "
-    print "GPIO Settings:"
-    print "  sck:    %d"%(obj.sck)
-    print "  mosi:   %d"%(obj.mosi)
-    print "  miso:   %d"%(obj.miso)
-    print "  cs:     %d"%(obj.cs)
-    print " "
-
-#assigning the pins for spi bus and assigning the clock speed for 3.3V
+#Assigning the pins for spi bus and assigning the clock speed for 3.3V
 def ADC(miso, mosi, sclk, cs):
     spiDev  = onionSpi.OnionSpi(1, 32766)
     spiDev.delay = 10
@@ -52,8 +31,6 @@ def polling_sensor(spiDev, channel):
     #look at http://www.farnell.com/datasheets/1599363.pdf for more information
     #channel 0 is set as default
     if channel == 0:
-        #11100000
-        #hexbyte = 0xE0
         #1101 0000
         hexbyte = 0xD0
 
@@ -65,34 +42,45 @@ def polling_sensor(spiDev, channel):
     byte0 = resp[0]
     byte1 = resp[1]
 
-
+	#converting the 2 bytes of data into 10 bits with bitwise operators
     return 0x3FF & ((byte0 << 7) | (byte1 >> 1))
 
 
 #main
-spi = ADC(9,8,7,6)
-num_of_samples = 1000
-ical = 60.6
-sumI = 0
-channel = 0
-sampleI = 512
-filteredI = 0
-for i in range(num_of_samples):
-    last_sampleI = sampleI
-    sampleI = polling_sensor(spi, channel)
-    last_filteredI = filteredI
-    filteredI = 0.996 * (last_filteredI + sampleI - last_sampleI)
-    sqI = filteredI * filteredI
-    sumI += sqI
+while True:
+    spi = ADC(9,8,7,6)
+    num_of_samples = 600
+    ical = 60.6
+    sumI = 0
+    channel = 0
+    sampleI = 512
+    filteredI = 0
+
+    #sampling at 600 becasue I want avoid any aliasing problems 
+    #it also deletes the offset of 512 resolution from the voltage divider and 
+    #implements a digital low pass filter to correct the phase shift 
+    for i in range(num_of_samples):
+        last_sampleI = sampleI
+        sampleI = polling_sensor(spi, channel)
+        last_filteredI = filteredI
+        filteredI = 0.996 * (last_filteredI + sampleI - last_sampleI)
+        sqI = filteredI * filteredI
+        sumI += sqI
 
 
-i_ratio = ical * ((3300 / 1000.0) / 1023)
-irms = i_ratio * (sumI / num_of_samples)**(0.5)
-power = 125 * irms
-y = round(power,3)
+    i_ratio = ical * ((3300 / 600) / 1023)
+    irms = i_ratio * (sumI / num_of_samples)**(0.5)
+    #Since we are using a hairdryer for prototyping, I need to figure out how much Vrms is using
+    #after research I later found that it uses a total of 125 Vrms
+    power = 125 * irms
+    #rouding down & converting into a string for the MQTT broker 
+    y = round(power,3)
+    x = str(y)
 
-x = str(y)
-
-print(x)
-
-publish.single("home/psensor1", x, hostname="IP_GOES_HERE", port=1883)
+    print(x)
+	try: 
+	    #trying to send data to broker 
+        publish.single("YOUR_TOPIC_HERE", x, hostname="IP_GOES_HERE", port=1883)
+	except:
+	    pass
+	time.sleep(3)
