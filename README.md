@@ -71,4 +71,9 @@ Becasue I did not want to use an arduino Expansion Dock, I decided to implement 
 
 Great explanation for the library being replicated in my code. [Circuit Diagram for measuring current](https://learn.openenergymonitor.org/electricity-monitoring/ct-sensors/interface-with-arduino)
 
+![Power Monitoring 1](https://user-images.githubusercontent.com/25919226/40143933-77d65074-5922-11e8-8eaf-eaa24cc0d5fe.JPG)
+![Power Monitoring 2](https://user-images.githubusercontent.com/25919226/40143934-77f0b11c-5922-11e8-8868-98704f7ce2d3.JPG)
+![Power Monitoring 3](https://user-images.githubusercontent.com/25919226/40143935-7808aab0-5922-11e8-8380-bdddf06b25a4.JPG)
+![Power Monitoring 4](https://user-images.githubusercontent.com/25919226/40143936-7818d994-5922-11e8-8dba-9897a4ae3d57.JPG)
+![Power Monitoring 5](https://user-images.githubusercontent.com/25919226/40143937-782ca5fa-5922-11e8-8687-8530c38149da.JPG)
 
