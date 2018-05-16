@@ -62,11 +62,13 @@ Similarly, this works the same as the Temperature/humidity client. A ```state_to
     state_topic: "home/motion"
     name: "Motion Dev"
     qos: 0
-    payload_on: "ON"
-    payload_off: "OFF"
+    payload_on: "Occupied"
+    payload_off: "Away"
 ```
-## Power Monitoring (Currently working on)
+## Power Monitoring (non-invasive current sensor, Analog to Digital Converter)
 
 Becasue I did not want to use an arduino Expansion Dock, I decided to implement an ADC to receive analog data and convert it to digital in order to have more control on the data. The communication from the Onion Omega 2+ and MCP3002, is done with the Serial Peripheral Interface bus. [ADC MCP3002](http://www.farnell.com/datasheets/1599363.pdf) I am using a [non-invasive current sensor](https://www.sparkfun.com/products/11005) to read AC current from the appliances. 
 
-Update: Communication with Homeassistant is still in development. I will upload the voltage divider diagram along with the burder resistor used to obtain an accurate readings.
+Great explanation for the library being replicated in my code. [Circuit Diagram for measuring current](https://learn.openenergymonitor.org/electricity-monitoring/ct-sensors/interface-with-arduino)
+
+
